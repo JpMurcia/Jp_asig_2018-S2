@@ -1,0 +1,24 @@
+CREATE TABLESPACE T2JUAN DATAFILE 'D:\bd\TJUAN.DBF' SIZE 380M;
+
+CREATE TEMPORARY TABLESPACE TTJUAN TEMPFILE 'D:\bd\TTJUAN.DBF'
+ SIZE 350M AUTOEXTEND ON;
+
+
+CREATE USER JUAN IDENTIFIED BY vombo4ku DEFAULT TABLESPACE T2JUAN 
+TEMPORARY TABLESPACE TTJUAN QUOTA 300M ON T2JUAN;
+
+CREATE DIRECTORY BACKUP AS 'D:\bd';
+
+select directory_name from dba_directories;
+GRANT all ON DIRECTORY BACKUP TO JUAN;
+
+exit
+
+expdp system/root @ orcl dumpfile=copia.dmp logfile=copia.log directory=BACKUP SCHEMAS=hr
+
+GRANT IMP_FULL_DATABASE TO JUAN;
+
+
+impdp JUAN/vombo4ku dumpfile=copia.dmp logfile=copia1.log directory=BACKUP schemas=hr remap_schema=hr:JUAN TABLE_EXISTS_ACTION=SKIP
+
+IMP JUAN/vombo4ku file'D:\bd\COPIA.DMP full=Y 

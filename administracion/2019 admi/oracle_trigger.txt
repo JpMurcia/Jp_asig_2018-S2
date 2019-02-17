@@ -1,0 +1,206 @@
+CREATE USER smithj
+  IDENTIFIED BY pwd4smithj
+  DEFAULT TABLESPACE tbs_perm_01
+  TEMPORARY TABLESPACE tbs_temp_01
+  QUOTA 20M on tbs_perm_01;
+
+GRANT create session TO smithj;
+GRANT create table TO smithj;
+GRANT create view TO smithj;
+GRANT create any trigger TO smithj;
+GRANT create any procedure TO smithj;
+GRANT create sequence TO smithj;
+GRANT create synonym TO smithj;
+
+SELECT * 
+FROM new_schema.suppliers;
+
+
+create database pag_anime;
+CONNECT pag_anime; 
+SELECT * FROM tab;
+
+c:/practica1.sql--seleccione para ejecutar 
+
+DESC empleats;-- describe 
+
+EXIT;
+
+ingresar------- 
+sqlplus
+system
+root
+------- crear usaurio , con permisos para el hr consultar en todas y 
+-------registrar en 2 tablas, el usuario debe tener tablespace, con el mismo nombre del usuario
+-------necesita tablespace tempora y permanente para el usuario, se crea cuando se crea datafile 
+-------2 datafile se debe llamar datefilepepe, datefilepeper;  
+------
+consultar y insetar dede oracle al hr de mysql
+----
+
+---
+service xe 
+xelistener ejecutar manualmente 
+---
+--crear hr en mysql una table, consultar en oracle 
+
+alter user hr account unlock;
+
+alter user HR identified by hr;
+
+conn hr/hr@xe
+
+desc DBA_TABLES;
+
+create table hola(id_hola int, nom_hola varchar(50));
+
+desc hola;
+
+
+CREATE USER super_sayajin_pepe
+  IDENTIFIED BY 
+  DEFAULT TABLESPACE tbs_perm_pepe
+  TEMPORARY TABLESPACE tbs_temp_pepe
+  QUOTA 20M on tbs_perm_01;
+
+--mostra las tabels del usuario
+select * from user_tables;
+
+--mostrar los hojetos
+select * from tab;
+
+CREATE USER jp IDENTIFIED BY root;
+
+CREATE ROLE programador;
+grant all privileges to jp;
+
+
+-- para exportar debe crear un directorio 
+
+
+CREATE UNDO TABLESPACE tsp_jp2
+  DATAFILE 'D:/JpMurcia/df_jp2.dat'
+  SIZE 20M AUTOEXTEND ON;
+
+-- crear un directori
+
+CREATE OR REPLACE DIRECTORY MY_DIR_jp AS 'D:/JpMurcia/my_jp_files';
+
+--muestra directorio
+select directory_name from dba_directories;
+
+--estecion del bacad .dmp
+
+expdp system@ORCL DUMPFILE=SH_user.dmp LOGFILE=exp_SH.log 
+DIRECTORY=EXP_DIR SCHEMAS=SH
+
+expdp hr/hr@xe  
+
+impdp system@PRD DUMPFILE=SH_user.dmp LOGFILE=imp_SH.log
+DIRECTORY=IMP_DIR SCHEMAS=SH TRANSFORM=DISABLE_ARCHIVE_LOGGING:Y
+
+create logfile  'D:/JpMurcia/expHR.log';
+
+ALTER DATABASE
+  ADD LOGFILE ('D:/JpMurcia/expHR.log') SIZE 4M;
+
+ALTER hr
+  ADD LOGFILE ('D:/JpMurcia/exp_HR.log') SIZE 4M;
+
+GRANT all ON DIRECTORY MY_DIR_JP TO jp;
+
+GRANT IMP_FULL_DATABASE TO jp;
+
+
+expdp  hr/hr@xe schemas = hr  directory = MY_DIR_JP  dumpfile = copiahr.dmp  logfile = expHR.log;
+
+
+expdp system/root @ orcl dumpfile=copia.dmp logfile=copia.log directory=BACKUP SCHEMAS=hr
+
+
+expdp  system/root @ orcl schemas = hr  directory = MY_DIR_JP  dumpfile = copiahr.dmp  logfile = exp_HR.log;
+
+
+
+
+impdp system/root dumpfile=copiahr1.dmp logfile=copiahr1.log directory=MY_DIR_JP schemas=hr remap_schema=hr:jp TABLE_EXISTS_ACTION=SKIP
+
+
+expdp scott / tiger @ db10g schemas = SCOTT directory = TEST_DIR dumpfile = SCOTT.dmp logfile = expdpSCOTT.log
+
+expdp system/root   schemas = hr  directory = MY_DIR_JP  dumpfile = copia.dmp logfile = expHR.log;
+
+
+show tablespaces;
+
+
+
+--paso a pasos 
+
+
+
+CREATE USER jp IDENTIFIED BY root;
+
+CREATE ROLE programador;
+grant all privileges to jp;
+
+
+-- para exportar debe crear un directorio 
+
+
+CREATE UNDO TABLESPACE tsp_jp2
+  DATAFILE 'D:/JpMurcia/df_jp2.dat'
+  SIZE 20M AUTOEXTEND ON;
+
+-- crear un directori
+
+CREATE OR REPLACE DIRECTORY MY_DIR_jp AS 'D:/JpMurcia/my_jp_files';
+
+GRANT IMP_FULL_DATABASE TO jp; 
+
+
+--consultar cursor 
+-- abrir el cursor y cerrarlo 
+
+--crear un nuevo atributo de la table aumento salario, que sea entero y debe redondearlos 
+-- sin desimales 
+
+describe employes;
+
+alter table employees add aum_salary int;
+--aumentar unicamente a los que tiene comision entre 2 y 3 
+
+--select max(), min()
+
+
+select (salary+(salary*0.25)) as aumento from employees 
+where commission_pct>=.2 and commission_pct<=.3;
+
+update employees
+set aum_salary=(employees.salary+(employees.salary*0.25))
+where commission_pct>=.2 and commission_pct<=.3;
+
+
+select commission_pct from employees;
+
+in
+update employees
+	set
+
+create or replace procedure proced_aumento is 
+
+
+ DECLARE
+       lsalario empleados.salario%TYPE; 
+       ldni empleados.dni%TYPE; 
+     BEGIN
+       SELECT salario, dni
+       INTO lsalario, ldni
+       FROM empleados
+       WHERE nombre = 'Juan'
+       AND apellidos = 'Rodrigo Comas';
+       /* Resto de sentencias del bloque */
+     END;
+
+
+

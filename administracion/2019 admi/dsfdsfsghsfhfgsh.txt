@@ -1,0 +1,39 @@
+
+
+28-05-2018
+escribir un prosedimiento para insertar automaticamente 
+crear un procedimiento 
+crear un atributo en empledo que se llame nivel, solo puede resicier (nivel gerencial, nivel cordinacion o general)
+un procedimiento, por medio de un cursor que me actualize la comicion, mutiplicar el salario si el salario es el minimo aplicar 25%
+eje = comsion 450 si 2100 m =25, si la comision es del maximo 5%y si 2100>x<2400 sera el 12%, y tener en cuenta si algunos ya tiene comision,
+si 
+
+modificar los empledos del 91 al 98 
+
+
+
+select * from user_tables;
+show user;
+
+
+
+
+
+-------------------------------------------------------------------------
+alter table employees add nivel_employees varchar(30);
+
+DECLARE
+	CURSOR cursor_1 IS
+		SELECT nombre, salario FROM empleados;
+	registro cursor_1%ROWTYPE
+BEGIN
+	IF NOT (cursor_1%ISOPEN) THEN OPEN cursor_1;
+ENDIF;
+
+LOOP
+	FETCH cursor_1 INTO registro;
+	EXIT WHEN cursor_1%NOTFOUND;
+
+END LOOP;
+CLOSE cursor_1;
+END;

@@ -1,0 +1,110 @@
+
+create database nominas;
+/q
+psql -U postgres -d nominas;
+
+create table nomina (
+id_nomina int,
+fecha_nomina Date,
+periodo int,
+total int
+);
+
+create table concepto(
+id_concepto int,
+nom_concepto varchar(50),
+valor int,
+tipo int,
+operacion int,
+estado varchar(1)
+);
+
+create table detalle_nomina(
+id_detalle int,
+fk_nomina int,
+fk_concepto int,
+valor int,
+cantidad int DEFAULT 1 NOT NULL
+);
+
+alter table nomina add constraint pk_nomina primary key(id_nomina);
+alter table detalle_nomina add constraint pk_detalle_nomina primary key(id_detalle);
+alter table concepto add constraint pk_concepto primary key(id_concepto);
+
+alter table detalle_nomina add constraint fk_detalle_n_nomina foreign key (fk_nomina) references nomina(id_nomina);
+alter table detalle_nomina add constraint fk_detalle_n_concepto foreign key (fk_concepto) references concepto(id_concepto);
+
+------------------------------------------------------------------ FUNCION
+
+CREATE OR REPLACE FUNCTION fu_b_inst_detalle() RETURNS trigger AS $$
+declare estado_c varchar;
+declare valor_concepto int;
+declare tipo_c int;
+declare saldo int;
+declare operacion_c int;
+declare consecutivo int;
+declare valor_nom int;
+BEGIN 
+  consecutivo=(select max(id_detalle)+1 from detalle_nomina);
+  estado_c=(select estado from concepto where id_concepto=new.fk_concepto);
+  	IF consecutivo is null then 
+   	consecutivo=1;
+   	end if;
+
+	if estado_c='A' then  
+        		New.id_detalle=consecutivo;
+        		valor_concepto=(select valor from concepto where id_concepto=new.fk_concepto);
+       			 tipo_c =(select tipo from concepto where id_concepto=new.fk_concepto);   
+        		operacion_c =(select operacion from concepto where id_concepto=new.fk_concepto);
+        		valor_nom=(select valor from concepto where id_concepto=1);
+
+       IF tipo_c=1 then         
+            saldo=((valor_nom*valor_concepto)/100)*New.cantidad;
+            New.valor=saldo;        
+            IF operacion_c=1 then               
+               update nomina set total=total-saldo where id_nomina=new.fk_nomina;
+               return NEW; 
+            else 
+               update nomina set total=(total+saldo) where id_nomina=new.fk_nomina;
+               return NEW; 
+            end IF;
+        else 
+              saldo=(New.cantidad*valor_concepto);
+              New.valor=saldo;
+              IF operacion_c=1 then
+                update nomina set total=total-saldo where id_nomina=new.fk_nomina;
+                return NEW; 
+              else 
+               update nomina set total=total+saldo where id_nomina=new.fk_nomina;
+               return NEW; 
+               end IF;
+         end IF; 
+  end IF; 
+  return NULL; 
+END;
+$$ LANGUAGE plpgsql;
+
+--------------------------------------------------------- TRIGGER
+CREATE TRIGGER tr_b_inst_nomina_detalle before Insert
+    ON detalle_nomina FOR EACH ROW
+    EXECUTE PROCEDURE fu_b_inst_detalle();
+
+
+---------------------------------------------------------- INSERT
+INSERT INTO nomina values(1,now(),2,0);
+
+INSERT INTO concepto values(1,'Sueldo',100000,2,2,'A');
+INSERT INTO concepto values(2,'horas extras',10,1,2,'A');
+
+INSERT INTO detalle_nomina (fk_nomina,fk_concepto) values(1,1);
+INSERT INTO detalle_nomina (fk_nomina,fk_concepto,cantidad) values(1,2,5);
+
+
+
+
+
+
+
+
+
+

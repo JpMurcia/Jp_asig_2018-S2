@@ -1,0 +1,103 @@
+create table categoria ( codigo int , nombre carchar (30), descripcion varchar (30));
+ 
+
+
+create or replace procedure crearCategoria(newcodigo in int, newnombre in varchar2, newdesc in varchar2)
+is
+--declara variables 
+total number;
+
+begin
+ total := 0 --asignar varlor 
+ select count(*) into total from categoria where codigo = newcodigo;
+
+if total = 0 then
+	insert into categoria values(newcodigo, newnombre, newdesc);
+end if;
+
+end;
+
+-- llamada como ejecutar el procedimiento
+begin
+	crearcategoria('1', 'electro','---');
+	crearcategoria('1', 'electro','---');
+	comit;
+end;
+
+select * from categoria;
+
+conn 
+system
+-----------
+create user USUARIOS3 identified by contra
+default tablespace users
+temporary tablespace temp
+quota unlimited on system;
+-------
+select username from dba_users where username 'USUARIOSS3';
+
+grant creaete session to USUARIOS3;
+
+create rol rol1;
+
+grant create user,creaete session, select any table, create tablespace to rol1;
+
+grant rol1 to USUARIO3;
+
+@tablespace.sql
+
+
+
+
+create or replace procedure listaCategoria(cursorMemoria OUT SYS_REFCURSOR)
+as
+
+begin
+ op cursorMemoria for select * from employees;
+
+
+end;
+
+set autoprint on; 
+
+variable cursorMemoria SYS_REFCURSOR;
+execute liestcategoria (:cursormemoria);--legistro de de toda la informacion 
+
+
+
+
+
+
+create or replace procedure listaCategoria(cursorMemoria OUT SYS_REFCURSOR, nombre in varchar2)
+as
+
+begin
+ op cursorMemoria for select * from employees where first_Name=name;
+
+
+end;
+
+set autoprint on; 
+
+variable cursorMemoria SYS_REFCURSOR;
+execute liestcategoria (:cursormemoria);--legistro de de toda la informacion 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

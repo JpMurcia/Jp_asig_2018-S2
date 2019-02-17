@@ -1,0 +1,60 @@
+alter user hr account unlock;
+
+alter user HR identified by hr;
+
+conn hr/hr@xe.
+
+
+
+
+GRANT CREATE session, CREATE table, CREATE view, 
+      CREATE procedure,CREATE synonym,
+      ALTER table, ALTER view, ALTER procedure,ALTER synonym,
+      DROP table, DROP view, DROP procedure,DROP synonym,
+      TO jp;
+
+--show user
+
+grant create session to jp;
+
+
+CREATE USER jp IDENTIFIED BY root;
+
+CREATE ROLE programador;
+grant all privileges to jp;
+
+
+
+-- para exportar debe crear un directorio 
+
+
+CREATE UNDO TABLESPACE tsp_jp2
+  DATAFILE 'D:/JpMurcia/df_jp2.dat'
+  SIZE 20M AUTOEXTEND ON;
+
+-- crear un directori
+
+CREATE OR REPLACE DIRECTORY MY_DIR_jp AS 'C:/Users/estudiante.UDLA/Documents/my_jp_files';
+
+--muestra directorio
+select directory_name from dba_directories;
+
+--estecion del bacad .dmp
+
+expdp system@ORCL DUMPFILE=SH_user.dmp LOGFILE=exp_SH.log 
+DIRECTORY=EXP_DIR SCHEMAS=SH
+
+
+
+impdp system@PRD DUMPFILE=SH_user.dmp LOGFILE=imp_SH.log
+DIRECTORY=IMP_DIR SCHEMAS=SH TRANSFORM=DISABLE_ARCHIVE_LOGGING:Y
+
+
+
+
+expdp scott / tiger @ db10g schemas = SCOTT directory = TEST_DIR dumpfile = SCOTT.dmp logfile = expdpSCOTT.log
+
+expdp system/root   schemas = hr  directory = MY_DIR_JP  dumpfile = copia.dmp logfile = expHR.log;
+
+
+show tablespaces;
